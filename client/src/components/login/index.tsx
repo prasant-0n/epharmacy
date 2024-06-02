@@ -4,6 +4,10 @@ const LoginPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true); // State to toggle between Login and Sign Up forms
   const [isForgotPassword, setIsForgotPassword] = useState(false); // State to toggle Forgot Password form
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState(''); // For Sign Up form
+  const [error, setError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Close the modal if clicked outside
@@ -25,14 +29,79 @@ const LoginPopup: React.FC = () => {
     };
   }, [open]);
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value);
+
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      // Replace with your sign-up logic
+      console.log("Sign Up", { email, password });
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setOpen(false);
+    } catch (err) {
+      setError("Sign Up failed. Please try again.");
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      // Replace with your forgot password logic
+      console.log("Forgot Password", { email });
+      // Clear form
+      setEmail('');
+      setOpen(false);
+    } catch (err) {
+      setError("Failed to reset password. Please try again.");
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      // Replace with your login logic
+      console.log("Login", { email, password });
+      // Clear form
+      setEmail('');
+      setPassword('');
+      setOpen(false);
+    } catch (err) {
+      setError("Login failed. Please try again.");
+    }
+  };
+
   return (
     <>
-      <button
+      {/* <button
         type="button"
         onClick={() => setOpen(true)}
         className="flex items-center 2xl:text-xl 2xl:h-12 justify-center h-10 px-4 py-2 text-base font-semibold text-white transition-all duration-200 rounded-full bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 shadow-button shadow-blue-600/50 focus:ring-2 focus:ring-blue-950 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none"
       >
         Log in
+      </button> */}
+
+      <button type='button'
+        className="bg-transparent border border-gray-300 hover:border-[#10847E] px-4 py-2 mt-4 text-sm text-[#10847E] font-semibold"
+        onClick={() => setOpen(true)}
+
+      >
+        LOGIN / SIGNUP
       </button>
 
       {open && (
@@ -76,6 +145,7 @@ const LoginPopup: React.FC = () => {
                       ? 'Please enter your email address to reset your password.'
                       : 'Create an account to start using our services.'}
                   </p>
+                  {error && <p className="text-red-500">{error}</p>}
                 </div>
 
                 {!isForgotPassword && (
@@ -118,7 +188,7 @@ const LoginPopup: React.FC = () => {
                 )}
 
                 {isForgotPassword ? (
-                  <form className="w-full">
+                  <form className="w-full" onSubmit={handleForgotPassword}>
                     <label htmlFor="email" className="sr-only">Email address</label>
                     <input
                       name="email"
@@ -127,7 +197,8 @@ const LoginPopup: React.FC = () => {
                       required
                       className="block w-full mb-4 rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1"
                       placeholder="Email Address"
-                      value=""
+                      value={email}
+                      onChange={handleEmailChange}
                     />
                     <button 
                       className="inline-flex mt-4 h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-white transition-all duration-200 bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 shadow-button shadow-blue-600/50 focus:ring-2 focus:ring-blue-950 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none"
@@ -137,7 +208,7 @@ const LoginPopup: React.FC = () => {
                     </button>
                   </form>
                 ) : (
-                  <form className="w-full">
+                  <form className="w-full" onSubmit={isLogin ? handleLogin : handleSignUp}>
                     <label htmlFor="email" className="sr-only">Email address</label>
                     <input
                       name="email"
@@ -146,7 +217,8 @@ const LoginPopup: React.FC = () => {
                       required
                       className="block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1"
                       placeholder="Email Address"
-                      value=""
+                      value={email}
+                      onChange={handleEmailChange}
                     />
                     <label htmlFor="password" className="sr-only">Password</label>
                     <input
@@ -156,20 +228,26 @@ const LoginPopup: React.FC = () => {
                       required
                       className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1"
                       placeholder="Password"
-                      value=""
+                      value={password}
+                      onChange={handlePasswordChange}
                     />
                     {!isLogin && (
-                      <><label htmlFor="confirm-password" className="sr-only">Confirm Password</label><input
+                      <>
+                        <label htmlFor="confirm-password" className="sr-only">Confirm Password</label>
+                        <input
                           name="confirm-password"
                           type="password"
                           autoComplete="new-password"
                           required
                           className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:ring-offset-1"
                           placeholder="Confirm Password"
-                          value="" /></>
+                          value={confirmPassword}
+                          onChange={handleConfirmPasswordChange}
+                        />
+                      </>
                     )}
                     <button 
-                      className="inline-flex mt-4 h-10 w-full items-center justify-center gap-2 rounded border border-slate-300 bg-white p-2 text-sm font-medium text-white transition-all duration-200 bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 shadow-button shadow-blue-600/50 focus:ring-2 focus:ring-blue-950 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none"
+                      className="inline-flex mt-4 h-10 w-full items-center justify-center gap-2 rounded border border-[#10847E] bg-[#10847E] p-2 text-sm font-medium text-white transition-all duration-200 bg-gradient-to-b from-[#10847E] to-[#36f6ec] hover:to-[#2df8ed] shadow-button shadow-blue-600/50 focus:ring-2 focus:ring-blue-950 focus:ring-offset-2 ring-offset-gray-200 hover:shadow-none"
                       type='submit'
                     >
                       {isLogin ? 'Login' : 'Sign Up'}
@@ -231,4 +309,3 @@ const LoginPopup: React.FC = () => {
 };
 
 export default LoginPopup;
-

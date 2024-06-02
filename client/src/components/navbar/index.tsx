@@ -1,192 +1,120 @@
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 import LoginPopup from '../login';
 
-interface NavigationItem {
-  name: string;
-  href: string;
-  current: boolean;
-}
+const Navbar: React.FC = () => {
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-const navigation: NavigationItem[] = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-];
+  // const handleMenuToggle = () => {
+  //   setIsMenuOpen(!isMenuOpen);
+  // };
 
-function classNames(...classes: (string | boolean | undefined)[]): string {
-  return classes.filter(Boolean).join(' ');
-}
+  const handleProfileToggle = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
 
-export default function Navbar() {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
-      {({ open }: { open: boolean }) => (
-        <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                {/* Mobile menu button */}
-                <DisclosureButton className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </DisclosureButton>
-              </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
-                  />
-                </div>
-                <div className="hidden sm:ml-6 sm:block">
-                <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
-                  <div className='flex justify-center flex-row px-3 py-2 text-sm font-medium'>
-                    <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Open user menu</span>
-                      {/* <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      /> */}
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                      </svg>
-                    </MenuButton>
-                    <button
-                      type="button"
-                      className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      {/* <span className="absolute -inset-1.5" />
-                      <span className=" hover:underline">Login Here</span> */}
-                      <LoginPopup/>
-                    </button>
-                    
-                  </div>
-                  <Transition
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <MenuItem>
-                        {({ active }: { active: boolean }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }: { active: boolean }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }: { active: boolean }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Orders
-                          </a>
-                        )}
-                      </MenuItem>
-                      <MenuItem>
-                        {({ active }: { active: boolean }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Sign out
-                          </a>
-                        )}
-                      </MenuItem>
-                    </MenuItems>
-                  </Transition>
-                </Menu>
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                  </svg>
+    <header className='flex shadow-lg py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] sm:w-full tracking-wide relative z-50'>
+      <div className='w-full flex flex-wrap items-center lg:gap-y-4 gap-y-6 gap-x-4 md:mx-20 mx-6 '>
+        <a href="javascript:void(0)"><img src="https://assets.pharmeasy.in/apothecary/images/logo_big.svg?dim=256x0" alt="logo" className='md:w-36 w-28' /></a>
 
-                </button>
-              </div>
-            </div>
+        <div id="collapseMenu"
+        className={`max-lg:hidden md:!flex lg:items-center lg:flex-1 max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-40 max-lg:before:inset-0 max-lg:before:z-50`}>
+        {/* <button id="toggleClose" className='lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white p-3'>
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 fill-black" viewBox="0 0 320.591 320.591">
+          <path d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z" data-original="#000000"></path>
+          <path d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z" data-original="#000000"></path>
+        </svg>
+      </button> */}
+
+
+      <ul className='flex flex-row gap-8'>
+            
+            {['Men', 'Women', 'Kids', 'Home & Living', 'Beauty', 'Studio'].map((item, index) => (
+              <li key={index} className='max-lg:border-b max-lg:py-3 relative lg:hover:after:absolute lg:after:bg-[#10847E] lg:after:w-0 lg:hover:after:w-full lg:hover:after:h-[3px] lg:after:block lg:after:-bottom-2 lg:after:transition-all lg:after:duration-300'>
+                <a href='javascript:void(0)' className='text-[#333] block text-sm font-semibold'>{item}</a>
+              </li>
+            ))}
+          </ul>
+
+          <div className='lg:mx-8 max-xl:hidden flex items-center bg-gray-100 px-4 h-10 rounded flex-1'>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="18px" className="cursor-pointer fill-gray-500 mr-4 rotate-90 inline-block">
+              <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
+            </svg>
+            <input type='text' placeholder='Search something...' className='w-full outline-none text-sm bg-transparent' />
           </div>
+        </div>
 
-          <DisclosurePanel className="sm:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {navigation.map((item) => (
-                <DisclosureButton
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
-                >
-                  {item.name}
-                </DisclosureButton>
-              ))}
+        <div className='flex items-center ml-auto'>
+          <ul className="flex space-x-4">
+            <li className="relative px-1 after:absolute after:bg-[#10847E] after:w-0 hover:after:w-full hover:after:h-[3px] after:block after:-bottom-2 after:left-0 after:transition-all after:duration-300">
+            <div className="flex flex-col justify-center items-center cursor-pointer" onClick={handleProfileToggle}>
+               <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 512 512">
+                <path
+                  d="M337.711 241.3a16 16 0 0 0-11.461 3.988c-18.739 16.561-43.688 25.682-70.25 25.682s-51.511-9.121-70.25-25.683a16.007 16.007 0 0 0-11.461-3.988c-78.926 4.274-140.752 63.672-140.752 135.224v107.152C33.537 499.293 46.9 512 63.332 512h385.336c16.429 0 29.8-12.707 29.8-28.325V376.523c-.005-71.552-61.831-130.95-140.757-135.223zM446.463 480H65.537V376.523c0-52.739 45.359-96.888 104.351-102.8C193.75 292.63 224.055 302.97 256 302.97s62.25-10.34 86.112-29.245c58.992 5.91 104.351 50.059 104.351 102.8zM256 234.375a117.188 117.188 0 1 0-117.188-117.187A117.32 117.32 0 0 0 256 234.375zM256 32a85.188 85.188 0 1 1-85.188 85.188A85.284 85.284 0 0 1 256 32z"
+                  data-original="#000000" />
+                </svg>
+                <span className="text-xs font-semibold mt-1">Profile</span>
+              </div>
+               {/* Profile Dropdown */}
+              {isProfileOpen && (
+              <div
+              className="bg-white z-20 shadow-lg py-6 px-6 sm:min-w-[320px] max-sm:min-w-[250px] max-sm:-right-32 absolute right-0 top-14">
+              <h6 className="font-semibold text-sm">Welcome</h6>
+              <p className="text-sm text-gray-500 mt-1">To access account and manage orders</p>
+              <LoginPopup/>
+              <hr className="border-b-0 my-4" />
+              <ul className="space-y-1.5">
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Order</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Wishlist</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Gift Cards</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Contact Us</a></li>
+              </ul>
+              <hr className="border-b-0 my-4" />
+              <ul className="space-y-1.5">
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Coupons</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Saved Credits</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Contact Us</a></li>
+                <li><a href='javascript:void(0)' className="text-sm text-gray-500 hover:text-[#10847E]">Saved Addresses</a>
+                </li>
+              </ul>
             </div>
-          </DisclosurePanel>
-        </>
-      )}
-    </Disclosure>
+              )}
+            </li>
+          <li
+            className="relative px-1 after:absolute after:bg-[#10847E] after:w-0 hover:after:w-full hover:after:h-[3px] after:block after:-bottom-2 after:left-0 after:transition-all after:duration-300">
+            <div className="flex flex-col justify-center items-center cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 64 64">
+                <path
+                  d="M45.5 4A18.53 18.53 0 0 0 32 9.86 18.5 18.5 0 0 0 0 22.5C0 40.92 29.71 59 31 59.71a2 2 0 0 0 2.06 0C34.29 59 64 40.92 64 22.5A18.52 18.52 0 0 0 45.5 4ZM32 55.64C26.83 52.34 4 36.92 4 22.5a14.5 14.5 0 0 1 26.36-8.33 2 2 0 0 0 3.27 0A14.5 14.5 0 0 1 60 22.5c0 14.41-22.83 29.83-28 33.14Z"
+                  data-original="#000000"></path>
+              </svg>
+              <span className="text-xs font-semibold mt-1">Wishlist</span>
+            </div>
+          </li>
+          <li
+            className="relative px-1 after:absolute after:bg-[#10847E] after:w-0 hover:after:w-full hover:after:h-[3px] after:block after:-bottom-2 after:left-0 after:transition-all after:duration-300">
+            <div className="flex flex-col justify-center items-center cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 489 489">
+                <path
+                  d="m440.1 422.7-28-315.3c-.6-7-6.5-12.3-13.4-12.3h-57.6C340.3 42.5 297.3 0 244.5 0s-95.8 42.5-96.6 95.1H90.3c-7 0-12.8 5.3-13.4 12.3l-28 315.3c0 .4-.1.8-.1 1.2 0 35.9 32.9 65.1 73.4 65.1h244.6c40.5 0 73.4-29.2 73.4-65.1 0-.4 0-.8-.1-1.2zM244.5 27c37.9 0 68.8 30.4 69.6 68.1H174.9c.8-37.7 31.7-68.1 69.6-68.1zm122.3 435H122.2c-25.4 0-46-16.8-46.4-37.5l26.8-302.3h45.2v41c0 7.5 6 13.5 13.5 13.5s13.5-6 13.5-13.5v-41h139.3v41c0 7.5 6 13.5 13.5 13.5s13.5-6 13.5-13.5v-41h45.2l26.9 302.3c-.4 20.7-21.1 37.5-46.4 37.5z"
+                  data-original="#000000" />
+              </svg>
+              <span className="text-xs font-semibold mt-1">Bag</span>
+            </div>
+          </li>
+
+          </ul>
+        </div>
+
+          {/* <button id="toggleOpen" className='lg:hidden ml-7' onClick={handleMenuToggle}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 fill-black" viewBox="0 0 382.735 382.735">
+            <path d="M12.735 80.26h357.265c7.03 0 12.735-5.705 12.735-12.735S377.03 54.79 370 54.79H12.735C5.705 54.79 0 60.495 0 67.525s5.705 12.735 12.735 12.735zM369.385 302.475H13.35c-7.03 0-12.735 5.705-12.735 12.735s5.705 12.735 12.735 12.735h356.035c7.03 0 12.735-5.705 12.735-12.735-.001-7.03-5.705-12.735-12.735-12.735zM370.106 163.633H12.63c-7.03 0-12.735 5.705-12.735 12.735s5.705 12.735 12.735 12.735h357.476c7.03 0 12.735-5.705 12.735-12.735s-5.704-12.735-12.735-12.735z" data-original="#000000"></path>
+          </svg>
+        </button> */}
+      </div>
+    </header>
   );
-}
+};
+
+export default Navbar;
